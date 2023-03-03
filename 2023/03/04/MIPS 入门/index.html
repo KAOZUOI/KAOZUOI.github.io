@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Instructions are all 32 bitsbyte(8 bits), halfword (2 bytes), word (4 bytes)a character requires 1 byte of storagean integer requires 1 word (4 bytes) of storage 本质是数据声明+普通文本+程序编码数据声明：-   数据段以 .data为开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIPS入门">
+<meta property="og:url" content="http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="KaoZuoI&#39;s Blog">
+<meta property="og:description" content="Instructions are all 32 bitsbyte(8 bits), halfword (2 bytes), word (4 bytes)a character requires 1 byte of storagean integer requires 1 word (4 bytes) of storage 本质是数据声明+普通文本+程序编码数据声明：-   数据段以 .data为开">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-03T16:37:18.809Z">
+<meta property="article:modified_time" content="2023-03-03T16:37:44.605Z">
+<meta property="article:author" content="KaoZuoI">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>MIPS入门</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/01/26/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&text=MIPS入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&is_video=false&description=MIPS入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIPS入门&body=Check out this article: http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&name=MIPS入门&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&t=MIPS入门"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E8%B4%A8%E6%98%AF%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E-%E6%99%AE%E9%80%9A%E6%96%87%E6%9C%AC-%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A0%81%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E%EF%BC%9A-%E6%95%B0%E6%8D%AE%E6%AE%B5%E4%BB%A5-data%E4%B8%BA%E5%BC%80%E5%A7%8B%E6%A0%87%E5%BF%97-%E5%A3%B0%E6%98%8E%E5%8F%98%E9%87%8F%E5%90%8E%EF%BC%8C%E5%8D%B3%E5%9C%A8%E4%B8%BB%E5%AD%98%E4%B8%AD%E5%88%86%E9%85%8D%E7%A9%BA%E9%97%B4%E3%80%82%E4%BB%A3%E7%A0%81%EF%BC%9A-%E4%BB%A3%E7%A0%81%E6%AE%B5%E4%BB%A5-text%E4%B8%BA%E5%BC%80%E5%A7%8B%E6%A0%87%E5%BF%97-%E5%90%84%E9%A1%B9%E6%8C%87%E4%BB%A4%E6%93%8D%E4%BD%9C-%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3%E4%B8%BAmain%EF%BC%9A%E6%A0%87%E5%BF%97-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9D%9F%E6%A0%87%E5%BF%97%EF%BC%88%E8%AF%A6%E8%A7%81%E4%B8%8B%E6%96%87%EF%BC%89%E6%B3%A8%E9%87%8A%EF%BC%9A-%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">本质是数据声明+普通文本+程序编码数据声明：-   数据段以 .data为开始标志-   声明变量后，即在主存中分配空间。代码：-   代码段以 .text为开始标志-   各项指令操作-   程序入口为main：标志-   程序结束标志（详见下文）注释：-   使用#</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">数据声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-x2F-%E5%86%99%E5%85%A5-%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">读取&#x2F;写入 指令集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#load"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">load</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#store"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">store</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#load-immediate"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">load immediate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#load-address"><span class="toc-number">1.2.0.4.</span> <span class="toc-text">load address</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#indirect-addressing"><span class="toc-number">1.2.0.5.</span> <span class="toc-text">indirect addressing</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#based-or-indexed-addressing"><span class="toc-number">1.2.0.6.</span> <span class="toc-text">based or indexed addressing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="toc-number">1.3.</span> <span class="toc-text">算术指令集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#add"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">add</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sub"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">sub</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mult"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">mult</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#div"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">div</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mfhi-x2F-mflo"><span class="toc-number">1.3.0.5.</span> <span class="toc-text">mfhi&#x2F;mflo</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81"><span class="toc-number">1.4.</span> <span class="toc-text">控制流</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Branches"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">Branches</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Jumps"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">Jumps</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Subroutine-Calls"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">Subroutine Calls</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System-Calls-and-I-x2F-O"><span class="toc-number">1.5.</span> <span class="toc-text">System Calls and I&#x2F;O</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        MIPS入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">KaoZuoI</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-03T16:37:18.809Z" itemprop="datePublished">2023-03-04</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>Instructions are all 32 bits<br>byte(8 bits), halfword (2 bytes), word (4 bytes)<br>a character requires 1 byte of storage<br>an integer requires 1 word (4 bytes) of storage</p>
+<h2 id="本质是数据声明-普通文本-程序编码数据声明：-数据段以-data为开始标志-声明变量后，即在主存中分配空间。代码：-代码段以-text为开始标志-各项指令操作-程序入口为main：标志-程序结束标志（详见下文）注释：-使用"><a href="#本质是数据声明-普通文本-程序编码数据声明：-数据段以-data为开始标志-声明变量后，即在主存中分配空间。代码：-代码段以-text为开始标志-各项指令操作-程序入口为main：标志-程序结束标志（详见下文）注释：-使用" class="headerlink" title="本质是数据声明+普通文本+程序编码数据声明：-   数据段以 .data为开始标志-   声明变量后，即在主存中分配空间。代码：-   代码段以 .text为开始标志-   各项指令操作-   程序入口为main：标志-   程序结束标志（详见下文）注释：-   使用#"></a>本质是数据声明+普通文本+程序编码<br>数据声明：<br>-   数据段以 <strong>.data</strong>为开始标志<br>-   声明变量后，即在主存中分配空间。<br>代码：<br>-   代码段以 <strong>.text</strong>为开始标志<br>-   各项指令操作<br>-   程序入口为<strong>main：</strong>标志<br>-   程序结束标志（详见下文）<br>注释：<br>-   使用#</h2><h3 id="数据声明"><a href="#数据声明" class="headerlink" title="数据声明"></a>数据声明</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">name:</span>  storage_type	 value(s)</span><br></pre></td></tr></table></figure>
+<p>通常给变量赋一个初始值；对于**.space**,需要指明需要多少大小空间（bytes)</p>
+<h3 id="读取-x2F-写入-指令集"><a href="#读取-x2F-写入-指令集" class="headerlink" title="读取&#x2F;写入 指令集"></a>读取&#x2F;写入 指令集</h3><ul>
+<li>要访问内存只能用 <strong>load</strong> 或者 <strong>store</strong> 指令</li>
+<li>其他的只能都一律是寄存器操作</li>
+</ul>
+<h5 id="load"><a href="#load" class="headerlink" title="load"></a>load</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lw	register_destination, RAM_source</span><br></pre></td></tr></table></figure>
+<p>从内存中 复制 RAM_source 的内容到 register_destination 中<br>（lw中的’w’意为’word’,即该数据大小为4个字节）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lb	register_destination, RAM_source</span><br></pre></td></tr></table></figure>
+<p>同上， lb 意为 load byte</p>
+<h5 id="store"><a href="#store" class="headerlink" title="store"></a>store</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sw	register_source, RAM_destination</span><br></pre></td></tr></table></figure>
+<p>将指定寄存器中的数据 写入 到指定的内存中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sb	register_source, RAM_destination</span><br></pre></td></tr></table></figure>
+<h5 id="load-immediate"><a href="#load-immediate" class="headerlink" title="load immediate"></a>load immediate</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">li	register_destination, value</span><br></pre></td></tr></table></figure>
+<p>将 immediate value 载入 register_destination 中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">example: </span><br><span class="line">	.data </span><br><span class="line">var1: .word 23  # declare storage for var1; initial value is 23 </span><br><span class="line">	.text </span><br><span class="line">__start: </span><br><span class="line">	lw $t0, var1 </span><br><span class="line">		# load contents of RAM location into register $t0: $t0 = var1 </span><br><span class="line">	li $t1, 5 </span><br><span class="line">		# $t1 = 5 (&quot;load immediate&quot;) </span><br><span class="line">	sw $t1, var1 </span><br><span class="line">		# store contents of register $t1 into RAM: var1 = $t1 </span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+<h5 id="load-address"><a href="#load-address" class="headerlink" title="load address"></a>load address</h5><p>直接给地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">la	$t0, var1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>copy RAM address of var1 (presumably a label defined in the program) into register $t0</li>
+</ul>
+<h5 id="indirect-addressing"><a href="#indirect-addressing" class="headerlink" title="indirect addressing"></a>indirect addressing</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lw	$t2, ($t0)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>load word at RAM address contained in $t0 into $t2<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sw	$t2, ($t0)</span><br></pre></td></tr></table></figure></li>
+<li>store word in register $t2 into RAM at address contained in $t0</li>
+</ul>
+<h5 id="based-or-indexed-addressing"><a href="#based-or-indexed-addressing" class="headerlink" title="based or indexed addressing"></a>based or indexed addressing</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lw $t2, 4($t0)</span><br></pre></td></tr></table></figure>
+<p>• load word at RAM address ($t0+4) into register $t2<br>• “4” gives offset from address in register $t0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sw $t2, -12($t0)</span><br></pre></td></tr></table></figure>
+<p>• store word in register $t2 into RAM at address ($t0 - 12)<br>• negative offsets are fine</p>
+<p>Note: based addressing is especially useful for:<br>• arrays; access elements as offset from base address<br>• stacks; easy to access elements at offset from stack pointer or frame pointer</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">	<span class="meta">.data</span></span><br><span class="line"><span class="symbol">array1:</span> <span class="meta">.space</span> <span class="number">12</span></span><br><span class="line"><span class="comment"># declare 12 bytes of storage to hold array of 3 integers</span></span><br><span class="line">	<span class="meta">.text</span></span><br><span class="line"><span class="symbol">__start:</span></span><br><span class="line">	la $t0, array1</span><br><span class="line">	li $t1, <span class="number">5</span></span><br><span class="line">	sw $t1, ($t0)</span><br><span class="line">	<span class="comment"># first array element set to 5; indirect addressing</span></span><br><span class="line">	li $t1, <span class="number">13</span></span><br><span class="line">	sw $t1, <span class="number">4</span>($t0)</span><br><span class="line">	<span class="comment"># second array element set to 13</span></span><br><span class="line">	li $t1, -<span class="number">1</span></span><br><span class="line">	sw $t1, <span class="number">8</span>($t0)</span><br><span class="line">	<span class="comment"># third array element set to -7</span></span><br><span class="line">	done</span><br></pre></td></tr></table></figure>
+<h3 id="算术指令集"><a href="#算术指令集" class="headerlink" title="算术指令集"></a>算术指令集</h3><ul>
+<li>最多3个操作数</li>
+<li>操作数只能是寄存器，绝对不允许出现地址</li>
+<li>所有指令统一是32位 &#x3D; 4*8 bit &#x3D; 4bytes &#x3D; 1 word</li>
+</ul>
+<h5 id="add"><a href="#add" class="headerlink" title="add"></a>add</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add $t0,$t1,$t2</span><br></pre></td></tr></table></figure>
+<p>$t0 &#x3D; $t1 + $t2  add as signed (2’s complement) integers</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addi $t2,$t3, 5</span><br></pre></td></tr></table></figure>
+<p>$t2 &#x3D; $t3 + 5  “add immediate” (no sub immediate)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addu $t1,$t6,$t7</span><br></pre></td></tr></table></figure>
+<p>$t1 &#x3D; $t6 + $t7  add as unsigned integers</p>
+<h5 id="sub"><a href="#sub" class="headerlink" title="sub"></a>sub</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub $t2,$t3,$t4</span><br></pre></td></tr></table></figure>
+<p>$t2 &#x3D; $t3 - $t4</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">subu $t1,$t6,$t7</span><br></pre></td></tr></table></figure>
+<p>$t1 &#x3D; $t6 - $t7  subtract as unsigned integers</p>
+<h5 id="mult"><a href="#mult" class="headerlink" title="mult"></a>mult</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mult $t3,$t4</span><br></pre></td></tr></table></figure>
+<p>multiply 32-bit quantities in $t3 and $t4, and store 64-bit<br>result in special registers Lo and Hi :<br>(Hi,Lo) &#x3D; $t3 * $t4</p>
+<h5 id="div"><a href="#div" class="headerlink" title="div"></a>div</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">div $t5,$t6</span><br></pre></td></tr></table></figure>
+<p>Lo &#x3D; $t5 &#x2F; $t6 (integer quotient)<br>Hi &#x3D; $t5 mod $t6 (remainder)</p>
+<h5 id="mfhi-x2F-mflo"><a href="#mfhi-x2F-mflo" class="headerlink" title="mfhi&#x2F;mflo"></a>mfhi&#x2F;mflo</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mfhi $t0</span><br></pre></td></tr></table></figure>
+<p>move quantity in special register Hi to $t0: $t0 &#x3D; Hi</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mflo $t1</span><br></pre></td></tr></table></figure>
+<p>move quantity in special register Lo to $t1: $t1 &#x3D; Lo</p>
+<p>used to get at result of product or quotient</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">move $t2,$t3</span><br></pre></td></tr></table></figure>
+<p>$t2 &#x3D; $t3</p>
+<h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><h5 id="Branches"><a href="#Branches" class="headerlink" title="Branches"></a>Branches</h5><table>
+<thead>
+<tr>
+<th>b</th>
+<th>target</th>
+<th># unconditional branch to program label target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beq</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &#x3D; $t1</td>
+</tr>
+<tr>
+<td>blt</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &lt; $t1</td>
+</tr>
+<tr>
+<td>ble</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &lt;&#x3D; $t1</td>
+</tr>
+<tr>
+<td>bgt</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &gt; $t1</td>
+</tr>
+<tr>
+<td>bge</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &gt;&#x3D; $t1</td>
+</tr>
+<tr>
+<td>bne</td>
+<td>$t0,$t1,target</td>
+<td># branch to target if  $t0 &lt;&gt; $t1</td>
+</tr>
+</tbody></table>
+<h5 id="Jumps"><a href="#Jumps" class="headerlink" title="Jumps"></a>Jumps</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">j  target  </span><br><span class="line"># unconditional jump to program label target</span><br></pre></td></tr></table></figure>
+<p>看到就跳， 不用考虑任何条件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jr  $t3  </span><br><span class="line"># jump to address contained in $t3 (&quot;jump register&quot;)</span><br></pre></td></tr></table></figure>
+<p>类似相对寻址，跳到该寄存器给出的地址处</p>
+<h5 id="Subroutine-Calls"><a href="#Subroutine-Calls" class="headerlink" title="Subroutine Calls"></a>Subroutine Calls</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jal sub_label </span><br><span class="line"># &quot;jump and link&quot;</span><br></pre></td></tr></table></figure>
+<p>• copy program counter (return address) to register $ra (return address register)<br>• jump to program statement at sub_label</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jr $ra # &quot;jump register&quot;</span><br></pre></td></tr></table></figure>
+<p>• jump to return address in $ra (stored by jal instruction)<br>Note :<br>return address stored in register $ra; if subroutine will call other subroutines, or is recursive, return address should be copied from $ra onto stack to preserve it, since jal always places return address in this register and hence will overwrite previous value<br>如果说调用的子程序中有调用了其他子程序，如此往复， 则返回地址的标记就用 栈（stack） 来存储, 毕竟 $ra 只有一个</p>
+<h3 id="System-Calls-and-I-x2F-O"><a href="#System-Calls-and-I-x2F-O" class="headerlink" title="System Calls and I&#x2F;O"></a>System Calls and I&#x2F;O</h3><ul>
+<li>通过系统调用实现终端的输入输出，以及声明程序结束</li>
+<li>学会使用 syscall</li>
+<li>参数所使用的寄存器：$v0， $a0,  $a1</li>
+<li>返回值使用： $v0</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Code in $v0</th>
+<th>Arguments</th>
+<th>Results</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>print_int</td>
+<td>$v0 &#x3D; 1</td>
+<td>$a0 &#x3D; integer to be printed</td>
+<td></td>
+</tr>
+<tr>
+<td>print_float</td>
+<td>$v0 &#x3D; 2</td>
+<td>$f12 &#x3D; float to be printed</td>
+<td></td>
+</tr>
+<tr>
+<td>print_double</td>
+<td>$v0 &#x3D; 3</td>
+<td>$f12 &#x3D; double to be printed</td>
+<td></td>
+</tr>
+<tr>
+<td>print_string</td>
+<td>$v0 &#x3D; 4</td>
+<td>$a0 &#x3D; address of string in memory</td>
+<td></td>
+</tr>
+<tr>
+<td>read_int</td>
+<td>$v0 &#x3D; 5</td>
+<td></td>
+<td>integer returned in $v0</td>
+</tr>
+<tr>
+<td>read_float</td>
+<td>$v0 &#x3D; 6</td>
+<td></td>
+<td>float returned in $v0</td>
+</tr>
+<tr>
+<td>read_double</td>
+<td>$v0 &#x3D; 7</td>
+<td></td>
+<td>double returned in $v0</td>
+</tr>
+<tr>
+<td>read_string</td>
+<td>$v0 &#x3D; 8</td>
+<td>$a0 &#x3D; memory address of string input buffer<br>$a1 &#x3D; length of string buffer (n)</td>
+<td></td>
+</tr>
+<tr>
+<td>sbrk</td>
+<td>$v0 &#x3D; 9</td>
+<td>$a0 &#x3D; amount</td>
+<td>address in $v0</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>$v0 &#x3D;10</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>.ascii 与 .asciiz唯一区别就是 后者会在字符串最后自动加上一个终止符 ‘\0’</li>
+<li><ul>
+<li>对于读取整型， 浮点型，双精度的数据操作， 系统会读取一整行（也就是说以换行符为标志 ‘\n’）</li>
+</ul>
+</li>
+<li>sbrk服务将地址返回到包含n个额外字节的内存块。用于动态内存分配。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">打印一个存储在寄存器 $2 里的整型</span><br><span class="line">li	$v0, 1</span><br><span class="line">	#声明需要调用的操作代码为 1 （print_int) 并赋值给 $v0</span><br><span class="line">move $a0, $t2</span><br><span class="line">	#将要打印的整型赋值给 $a0</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">读取一个数，并且存储到内存中的 int_value 变量中</span><br><span class="line">li	$v0, 5</span><br><span class="line">syscall</span><br><span class="line">	#从键盘输入的值返回寄存器$v0</span><br><span class="line">sw $v0, int_value</span><br><span class="line">	#通过写入（store_word)指令将$v0的值（5）存入内存中</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">打印一个字符串</span><br><span class="line">	.data </span><br><span class="line">string1 .asciiz &quot;Print this.\n&quot;</span><br><span class="line">	.text</span><br><span class="line">main:</span><br><span class="line">	li $v0, 4</span><br><span class="line">	la $a0, string1</span><br><span class="line">		#将要打印的字符串地址赋值 $a0 = address(string1)</span><br><span class="line">	syscall</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">执行到这里， 程序结束</span><br><span class="line">li $v0, 10 </span><br><span class="line">	# system call code for exit = 10 </span><br><span class="line">syscall</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E8%B4%A8%E6%98%AF%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E-%E6%99%AE%E9%80%9A%E6%96%87%E6%9C%AC-%E7%A8%8B%E5%BA%8F%E7%BC%96%E7%A0%81%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E%EF%BC%9A-%E6%95%B0%E6%8D%AE%E6%AE%B5%E4%BB%A5-data%E4%B8%BA%E5%BC%80%E5%A7%8B%E6%A0%87%E5%BF%97-%E5%A3%B0%E6%98%8E%E5%8F%98%E9%87%8F%E5%90%8E%EF%BC%8C%E5%8D%B3%E5%9C%A8%E4%B8%BB%E5%AD%98%E4%B8%AD%E5%88%86%E9%85%8D%E7%A9%BA%E9%97%B4%E3%80%82%E4%BB%A3%E7%A0%81%EF%BC%9A-%E4%BB%A3%E7%A0%81%E6%AE%B5%E4%BB%A5-text%E4%B8%BA%E5%BC%80%E5%A7%8B%E6%A0%87%E5%BF%97-%E5%90%84%E9%A1%B9%E6%8C%87%E4%BB%A4%E6%93%8D%E4%BD%9C-%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3%E4%B8%BAmain%EF%BC%9A%E6%A0%87%E5%BF%97-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9D%9F%E6%A0%87%E5%BF%97%EF%BC%88%E8%AF%A6%E8%A7%81%E4%B8%8B%E6%96%87%EF%BC%89%E6%B3%A8%E9%87%8A%EF%BC%9A-%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">本质是数据声明+普通文本+程序编码数据声明：-   数据段以 .data为开始标志-   声明变量后，即在主存中分配空间。代码：-   代码段以 .text为开始标志-   各项指令操作-   程序入口为main：标志-   程序结束标志（详见下文）注释：-   使用#</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A3%B0%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">数据声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96-x2F-%E5%86%99%E5%85%A5-%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">读取&#x2F;写入 指令集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#load"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">load</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#store"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">store</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#load-immediate"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">load immediate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#load-address"><span class="toc-number">1.2.0.4.</span> <span class="toc-text">load address</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#indirect-addressing"><span class="toc-number">1.2.0.5.</span> <span class="toc-text">indirect addressing</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#based-or-indexed-addressing"><span class="toc-number">1.2.0.6.</span> <span class="toc-text">based or indexed addressing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E6%8C%87%E4%BB%A4%E9%9B%86"><span class="toc-number">1.3.</span> <span class="toc-text">算术指令集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#add"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">add</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sub"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">sub</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mult"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">mult</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#div"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">div</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mfhi-x2F-mflo"><span class="toc-number">1.3.0.5.</span> <span class="toc-text">mfhi&#x2F;mflo</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81"><span class="toc-number">1.4.</span> <span class="toc-text">控制流</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Branches"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">Branches</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Jumps"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">Jumps</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Subroutine-Calls"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">Subroutine Calls</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System-Calls-and-I-x2F-O"><span class="toc-number">1.5.</span> <span class="toc-text">System Calls and I&#x2F;O</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&text=MIPS入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&is_video=false&description=MIPS入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIPS入门&body=Check out this article: http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&title=MIPS入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&name=MIPS入门&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/03/04/MIPS%20%E5%85%A5%E9%97%A8/&t=MIPS入门"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    KaoZuoI
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
